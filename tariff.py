@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+# -*- mode:python ; tab-width:4 -*- ex:set tabstop=4 shiftwidth=4 expandtab: -*-
 # License: WTFPL
 # http://sam.zoy.org/wtfpl/
 
@@ -31,14 +33,14 @@ def printTariff():
         total += cost
         
     print "------------"
-    print "calls: %s" % total
+    print "calls: %s €" % total
     total += dtariff
-    print "calls + %s data plan : %s" % (dtariff, total)
+    print "calls + %s data plan : %s €" % (dtariff, total)
     vat = total*IVA
     total += vat
-    print "VAT: %s" % vat
+    print "VAT: %s €" % vat
     print "------------"    
-    print "TOTAL: %s" % total
+    print "TOTAL: %s €" % total
     print "------------"
 
 if __name__ == '__main__':
