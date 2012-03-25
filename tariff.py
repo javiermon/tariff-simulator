@@ -19,7 +19,8 @@ def printTariff():
     
     for line in fdata.readlines():
         line = line.replace('\n','')
-        minutes = int(line.split(':')[0]) + (int(line.split(':')[1])/MINUTES)
+        (mins, secs) = line.split(':')
+        minutes = int(mins) + (int(secs)/MINUTES)
         cost = (minutes * mtariff) + ESTABLISHMENT    
         print "%s - %s" % (line, cost)
         total += cost
