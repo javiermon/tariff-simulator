@@ -18,7 +18,7 @@ log = logging.getLogger('tariff')
 parser = re.compile(r"(?:(\d{2}):)?(\d{2}):(\d{2})")
 evaluator = lambda x: 0 if x is None else int(x)
 
-def appyTariff(tariff, fdata):
+def applyTariff(tariff, fdata):
     mtariff = tariffs[tariff]['minutes'] # 0.022 - 0.027
     dtariff = tariffs[tariff]['data']
     calls = 0
@@ -57,4 +57,4 @@ if __name__ == '__main__':
 
     tariff = sys.argv[2]
     fdata = open(sys.argv[1])
-    appyTariff(tariff, fdata)
+    applyTariff(tariff, fdata)
