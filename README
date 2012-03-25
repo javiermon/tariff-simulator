@@ -4,3 +4,7 @@ tariff simulator:
 reads input file with call minutes and a 
 tariff and returns the total cost of the bill
 
+
+sample usage:
+./tariff.py data lobo
+
