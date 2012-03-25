@@ -35,7 +35,7 @@ def applyTariff(tariff, fdata):
         minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
                 
         mtariff = map(lambda x: tariffs[x]['minutes'], tariff)
-        calls = map(lambda x: minutes*x + ESTABLISHMENT, mtariff) # [val1, val2, val3]
+        calls = map(lambda x: float("%.4f" % (minutes*x + ESTABLISHMENT)), mtariff) # [val1, val2, val3]
         
         log.debug( "%s - %s" % (match.group(0), calls))
         total = map(sum, zip(total, calls))
