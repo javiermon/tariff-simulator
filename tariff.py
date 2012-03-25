@@ -25,7 +25,6 @@ def applyTariff(tariff, fdata):
     else:
         tariff = [tariff]
 
-    calls = []
     total = [0]*len(tariffs.keys())
 
     log.debug("time  - cost")
