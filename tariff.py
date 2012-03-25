@@ -7,45 +7,54 @@
 from __future__ import division
 import sys, re
 from tariffs import tariffs
+import logging
 
 IVA = 0.18
 MINUTES = 60
 ESTABLISHMENT = 0.15
+format = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 
+log = logging.getLogger('tariff')
 parser = re.compile(r"(?:(\d{2}):)?(\d{2}):(\d{2})")
 evaluator = lambda x: 0 if x is None else int(x)
 
-def printTariff():
-    tariff = sys.argv[2]
-    fdata = open(sys.argv[1])
+def appyTariff(tariff, fdata):
     mtariff = tariffs[tariff]['minutes'] # 0.022 - 0.027
     dtariff = tariffs[tariff]['data']
+    calls = 0
     total = 0
 
-    print "time  - cost"
-    print "------------"
+    log.debug("time  - cost")
+    log.debug("------------")
     for line in fdata.readlines():
         match = parser.match(line)
         (hours, mins, secs) = map(evaluator, match.groups())
         minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
-        cost = minutes*mtariff + ESTABLISHMENT    
-        print "%s - %s" % (match.group(0), cost)
-        total += cost
+        calls = minutes*mtariff + ESTABLISHMENT    
+        log.debug( "%s - %s" % (match.group(0), calls))
+        total += calls
         
-    print "------------"
-    print "calls: %s €" % total
+    log.debug("------------")
+    log.debug("calls: %s €" % total)
     total += dtariff
-    print "calls + %s data plan : %s €" % (dtariff, total)
+    log.debug("calls + %s data plan : %s €" % (dtariff, total))
     vat = total*IVA
     total += vat
-    print "VAT: %s €" % vat
-    print "------------"    
-    print "TOTAL: %s €" % total
-    print "------------"
+    log.debug("VAT: %s €" % vat)
+    log.debug("------------")   
+    log.debug("TOTAL: %s €" % total)
+    log.debug("------------")
+    return (total, calls, dtariff)
 
 if __name__ == '__main__':
+    # stdout logging:
+    logging.basicConfig(format=format, level=logging.DEBUG)
+
     if len(sys.argv) != 3:
         print >> sys.stderr, "usage: %s file tariff" % sys.argv[0]
         print >> sys.stderr, "where tariff in %s" % tariffs.keys()
         exit(-1)
-    printTariff()
+
+    tariff = sys.argv[2]
+    fdata = open(sys.argv[1])
+    appyTariff(tariff, fdata)
