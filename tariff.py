@@ -46,5 +46,6 @@ def printTariff():
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         print >> sys.stderr, "usage: %s file tariff" % sys.argv[0]
+        print >> sys.stderr, "where tariff in %s" % tariffs.keys()
         exit(-1)
     printTariff()
