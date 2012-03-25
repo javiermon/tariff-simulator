@@ -3,12 +3,15 @@
 # http://sam.zoy.org/wtfpl/
 
 from __future__ import division
-import sys
+import sys, re
 from tariffs import tariffs
 
 IVA = 0.18
 MINUTES = 60
 ESTABLISHMENT = 0.15
+
+parser = re.compile(r"(?:(\d{2}):)?(\d{2}):(\d{2})")
+evaluator = lambda x: 0 if x is None else int(x)
 
 def printTariff():
     tariff = sys.argv[2]
@@ -18,11 +21,11 @@ def printTariff():
     total = 0
     
     for line in fdata.readlines():
-        line = line.replace('\n','')
-        (mins, secs) = line.split(':')
-        minutes = int(mins) + (int(secs)/MINUTES)
+        match = parser.match(line)
+        (hours, mins, secs) = map(evaluator,match.groups())
+        minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
         cost = (minutes * mtariff) + ESTABLISHMENT    
-        print "%s - %s" % (line, cost)
+        print "%s - %s" % (match.group(0), cost)
         total += cost
         
     print "calls: %s" % total
