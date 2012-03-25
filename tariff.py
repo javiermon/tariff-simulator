@@ -47,7 +47,7 @@ def appyTariff(tariff, fdata):
     return (total, calls, dtariff)
 
 if __name__ == '__main__':
-    # stdout logging:
+    # stderr logging:
     logging.basicConfig(format=format, level=logging.DEBUG)
 
     if len(sys.argv) != 3:
