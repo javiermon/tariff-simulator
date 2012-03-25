@@ -1,10 +1,9 @@
 tariff simulator:
 ----------------
 
-reads input file with call minutes and a 
-tariff and returns the total cost of the bill
+reads input file with call minutes and a tariff and returns the total cost of the bill
 
 
 sample usage:
-./tariff.py data lobo
-
+./tariff.py data lobo : calculates the bill for month data with tariff lobo
+./tariff.py data best : calculates the best tariff for month data
