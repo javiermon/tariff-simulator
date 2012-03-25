@@ -19,7 +19,9 @@ def printTariff():
     mtariff = tariffs[tariff]['minutes'] # 0.022 - 0.027
     dtariff = tariffs[tariff]['data']
     total = 0
-    
+
+    print "time  - cost"
+    print "------------"
     for line in fdata.readlines():
         match = parser.match(line)
         (hours, mins, secs) = map(evaluator,match.groups())
@@ -28,14 +30,16 @@ def printTariff():
         print "%s - %s" % (match.group(0), cost)
         total += cost
         
+    print "------------"
     print "calls: %s" % total
     total += dtariff
     print "calls + %s data plan : %s" % (dtariff, total)
     vat = total*IVA
     total += vat
     print "VAT: %s" % vat
+    print "------------"    
     print "TOTAL: %s" % total
-
+    print "------------"
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
