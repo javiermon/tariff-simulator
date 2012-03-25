@@ -24,7 +24,7 @@ def printTariff():
     print "------------"
     for line in fdata.readlines():
         match = parser.match(line)
-        (hours, mins, secs) = map(evaluator,match.groups())
+        (hours, mins, secs) = map(evaluator, match.groups())
         minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
         cost = minutes*mtariff + ESTABLISHMENT    
         print "%s - %s" % (match.group(0), cost)
