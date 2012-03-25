@@ -20,11 +20,7 @@ evaluator = lambda x: 0 if x is None else int(x)
 
 def applyTariff(tariff, fdata):
     findbest = (tariff == 'best')
-    if findbest:
-        tariff = tariffs.keys()
-    else:
-        tariff = [tariff]
-
+    tariff = tariffs.keys() if findbest else [tariff]
     total = [0]*len(tariffs.keys())
 
     log.debug("time  - cost")
