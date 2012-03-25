@@ -19,10 +19,14 @@ parser = re.compile(r"(?:(\d{2}):)?(\d{2}):(\d{2})")
 evaluator = lambda x: 0 if x is None else int(x)
 
 def applyTariff(tariff, fdata):
-    mtariff = tariffs[tariff]['minutes'] # 0.022 - 0.027
-    dtariff = tariffs[tariff]['data']
-    calls = 0
-    total = 0
+    findbest = (tariff == 'best')
+    if findbest:
+        tariff = tariffs.keys()
+    else:
+        tariff = [tariff]
+
+    calls = []
+    total = [0]*len(tariffs.keys())
 
     log.debug("time  - cost")
     log.debug("------------")
@@ -30,21 +34,32 @@ def applyTariff(tariff, fdata):
         match = parser.match(line)
         (hours, mins, secs) = map(evaluator, match.groups())
         minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
-        calls = minutes*mtariff + ESTABLISHMENT    
-        log.debug( "%s - %s" % (match.group(0), calls))
-        total += calls
+                
+        mtariff = map(lambda x: tariffs[x]['minutes'], tariff)
+        calls = map(lambda x: minutes*x + ESTABLISHMENT, mtariff) # [val1, val2, val3]
         
+        log.debug( "%s - %s" % (match.group(0), calls))
+        total = map(sum, zip(total, calls))
+        
+
     log.debug("------------")
     log.debug("calls: %s €" % total)
-    total += dtariff
+    dtariff = [tariffs[x]['data'] for x in tariff]
+    total = map(sum, zip(total, dtariff))
     log.debug("calls + %s data plan : %s €" % (dtariff, total))
-    vat = total*IVA
-    total += vat
+    vat = map(lambda x: x*IVA, total)
+    total = map(sum, zip(total, vat))
+
     log.debug("VAT: %s €" % vat)
     log.debug("------------")   
     log.debug("TOTAL: %s €" % total)
     log.debug("------------")
-    return (total, calls, dtariff)
+    if findbest:
+        best = min(total)
+        winner = tariffs.keys()[total.index(best)]
+        log.debug("BEST TARIFF IS %s FOR %s €" % (winner,best))
+        return (winner, best)
+    return (total, calls)
 
 if __name__ == '__main__':
     # stderr logging:
