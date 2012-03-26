@@ -5,23 +5,24 @@
 # http://sam.zoy.org/wtfpl/
 
 from __future__ import division
-import sys, re
+import sys, re, os
 from tariffs import tariffs
 import logging
 
 IVA = 0.18
 MINUTES = 60
 format = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
+BILLSDIR = 'bills/'
 
 log = logging.getLogger('tariff')
 parser = re.compile(r"(?:(\d{2}):)?(\d{2}):(\d{2})")
 evaluator = lambda x: 0 if x is None else int(x)
 
 def applyTariff(tariff, fdata):
-    findbest = (tariff == 'best')
-    tariff = tariffs.keys() if findbest else [tariff]
     total = [0]*len(tariffs.keys())
     
+    log.info("------------")
+    log.info("BILL FOR %s " % fdata.name)
     log.debug("time  - cost in %s" % tariff)
     log.debug("------------")
     for line in fdata.readlines():
@@ -44,18 +45,25 @@ def applyTariff(tariff, fdata):
 
     log.debug("VAT: %s €" % vat)
     log.debug("------------")   
-    log.debug("TOTAL: ")
+    log.info("TOTAL: ")
 
     for (tar, amount) in zip(tariff, total):
-        log.debug("%s : %s €" % (tar, amount))
-    log.debug("------------")
+        log.info("%s : %s €" % (tar, amount))
+    log.info("------------")
     return (total, calls)
 
-def findBest(total, calls):
+def findBest(total):
     best = min(total)
     winner = tariffs.keys()[total.index(best)]
-    log.debug("BEST TARIFF IS %s FOR %s €" % (winner, best))
+    log.info("BEST TARIFF IS %s FOR %s €" % (winner, best))
     return (winner, best)
+
+def printTotal(total, tariff):
+    log.info("------------")
+    log.info("GRAND TOTAL:")
+    for (tar, amount) in zip(tariff, total):
+        log.info("%s : %s €" % (tar, amount))
+    log.info("------------")
 
 if __name__ == '__main__':
     # stderr logging:
@@ -67,10 +75,24 @@ if __name__ == '__main__':
         exit(-1)
 
     tariff = sys.argv[2]
+    # find the best tariff?
     findbest = (tariff == 'best')
-    fdata = open(sys.argv[1])
-    (total, calls) = applyTariff(tariff, fdata)
-    if findbest:
-        findBest(total, calls)
+    tariff = tariffs.keys() if findbest else [tariff]
+    # run all bills?
+    if sys.argv[1] == 'all':
+        sumtotal = [0]*len(tariffs.keys())
+        for filename in os.listdir(BILLSDIR):
+            fdata = open(os.path.join(BILLSDIR, filename))
+            (total, calls) = applyTariff(tariff, fdata)
+            sumtotal = map(lambda x: float("%.4f" % sum(x)), zip(total,sumtotal))
+
+        printTotal(sumtotal, tariff)
+        if findbest:
+            findBest(sumtotal)
+    else:            
+        fdata = open(sys.argv[1])
+        (total, calls) = applyTariff(tariff, fdata)
+        if findbest:
+            findBest(total)
 
         
