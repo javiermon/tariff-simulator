@@ -67,7 +67,7 @@ def printTotal(total, tariff):
 
 if __name__ == '__main__':
     # stderr logging:
-    logging.basicConfig(format=format, level=logging.DEBUG)
+    logging.basicConfig(format=format, level=logging.INFO)
 
     if len(sys.argv) != 3:
         print >> sys.stderr, "usage: %s file tariff" % sys.argv[0]
