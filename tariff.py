@@ -50,7 +50,7 @@ def applyTariff(tariff, fdata):
     if findbest:
         best = min(total)
         winner = tariffs.keys()[total.index(best)]
-        log.debug("BEST TARIFF IS %s FOR %s €" % (winner,best))
+        log.debug("BEST TARIFF IS %s FOR %s €" % (winner, best))
         return (winner, best)
     return (total, calls)
 
