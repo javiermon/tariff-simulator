@@ -5,5 +5,7 @@ reads input file with call minutes and a tariff and returns the total cost of th
 
 
 sample usage:
-./tariff.py data lobo : calculates the bill for month data with tariff lobo
-./tariff.py data best : calculates the best tariff for month data
+./tariff.py data lobo : calculates the bill for month bill/data with tariff lobo
+./tariff.py data best : calculates the best tariff for month bill/data
+./tariff.py all best : calculates the best tariff for all monthly bills in bill/
+./tariff.py all lobo : calculates the total bill for tariff lobo with all monthly bills in bill/
