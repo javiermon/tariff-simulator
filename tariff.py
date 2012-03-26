@@ -11,7 +11,8 @@ import logging
 
 IVA = 0.18
 MINUTES = 60
-format = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
+PRECISION = "%.4f"
+FORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BILLSDIR = 'bills/'
 
 log = logging.getLogger('tariff')
@@ -30,18 +31,18 @@ def applyTariff(tariff, fdata):
         (hours, mins, secs) = map(evaluator, match.groups())
         minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
         mtariff = [(tariffs[x]['minutes'], tariffs[x]['establishment']) for x in tariff]
-        calls = [float("%.4f" % (minutes*tariffm + tariffe)) for (tariffm, tariffe) in mtariff] # [val1, val2, ..., valn]
+        calls = [float(PRECISION % (minutes*tariffm + tariffe)) for (tariffm, tariffe) in mtariff] # [val1, val2, ..., valn]
         
         log.debug( "%s - %s" % (match.group(0), calls))
-        total = map(lambda x: float("%.4f" % sum(x)) , zip(total, calls))
+        total = map(lambda x: float(PRECISION % sum(x)) , zip(total, calls))
 
     log.debug("------------")
     log.debug("calls: %s €" % total)
     dtariff = [tariffs[x]['data'] for x in tariff]
-    total = map(lambda x: float("%.4f" % sum(x)), zip(total, dtariff))
+    total = map(lambda x: float(PRECISION % sum(x)), zip(total, dtariff))
     log.debug("calls + %s data plan : %s €" % (dtariff, total))
-    vat = map(lambda x: float("%.4f" % (x*IVA)), total)
-    total = map(lambda x: float("%.4f" % sum(x)), zip(total, vat))
+    vat = map(lambda x: float(PRECISION % (x*IVA)), total)
+    total = map(lambda x: float(PRECISION % sum(x)), zip(total, vat))
 
     log.debug("VAT: %s €" % vat)
     log.debug("------------")   
@@ -67,7 +68,7 @@ def printTotal(total, tariff):
 
 if __name__ == '__main__':
     # stderr logging:
-    logging.basicConfig(format=format, level=logging.INFO)
+    logging.basicConfig(format=FORMAT, level=logging.INFO)
 
     if len(sys.argv) != 3:
         print >> sys.stderr, "usage: %s file tariff" % sys.argv[0]
@@ -84,7 +85,7 @@ if __name__ == '__main__':
         for filename in os.listdir(BILLSDIR):
             fdata = open(os.path.join(BILLSDIR, filename))
             (total, calls) = applyTariff(tariff, fdata)
-            sumtotal = map(lambda x: float("%.4f" % sum(x)), zip(total,sumtotal))
+            sumtotal = map(lambda x: float(PRECISION % sum(x)), zip(total,sumtotal))
 
         printTotal(sumtotal, tariff)
         if findbest:
