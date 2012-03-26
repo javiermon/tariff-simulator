@@ -22,8 +22,8 @@ def applyTariff(tariff, fdata):
     findbest = (tariff == 'best')
     tariff = tariffs.keys() if findbest else [tariff]
     total = [0]*len(tariffs.keys())
-
-    log.debug("time  - cost")
+    
+    log.debug("time  - cost in %s" % tariff)
     log.debug("------------")
     for line in fdata.readlines():
         match = parser.match(line)
