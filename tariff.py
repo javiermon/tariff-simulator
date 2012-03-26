@@ -44,7 +44,10 @@ def applyTariff(tariff, fdata):
 
     log.debug("VAT: %s €" % vat)
     log.debug("------------")   
-    log.debug("TOTAL: %s €" % total)
+    log.debug("TOTAL: ")
+
+    for (tar, amount) in zip(tariff, total):
+        log.debug("%s : %s €" % (tar, amount))
     log.debug("------------")
     if findbest:
         best = min(total)
