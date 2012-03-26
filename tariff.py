@@ -33,16 +33,15 @@ def applyTariff(tariff, fdata):
         calls = [float("%.4f" % (minutes*x + ESTABLISHMENT)) for x in mtariff] # [val1, val2, ..., valn]
         
         log.debug( "%s - %s" % (match.group(0), calls))
-        total = map(sum, zip(total, calls))
-        
+        total = map(lambda x: float("%.4f" % sum(x)) , zip(total, calls))
 
     log.debug("------------")
     log.debug("calls: %s €" % total)
     dtariff = [tariffs[x]['data'] for x in tariff]
-    total = map(sum, zip(total, dtariff))
+    total = map(lambda x: float("%.4f" % sum(x)), zip(total, dtariff))
     log.debug("calls + %s data plan : %s €" % (dtariff, total))
-    vat = map(lambda x: x*IVA, total)
-    total = map(sum, zip(total, vat))
+    vat = map(lambda x: float("%.4f" % (x*IVA)), total)
+    total = map(lambda x: float("%.4f" % sum(x)), zip(total, vat))
 
     log.debug("VAT: %s €" % vat)
     log.debug("------------")   
