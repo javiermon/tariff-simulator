@@ -11,7 +11,6 @@ import logging
 
 IVA = 0.18
 MINUTES = 60
-ESTABLISHMENT = 0.15
 format = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 
 log = logging.getLogger('tariff')
@@ -29,8 +28,8 @@ def applyTariff(tariff, fdata):
         match = parser.match(line)
         (hours, mins, secs) = map(evaluator, match.groups())
         minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
-        mtariff = [tariffs[x]['minutes'] for x in tariff]
-        calls = [float("%.4f" % (minutes*x + ESTABLISHMENT)) for x in mtariff] # [val1, val2, ..., valn]
+        mtariff = [(tariffs[x]['minutes'], tariffs[x]['establishment']) for x in tariff]
+        calls = [float("%.4f" % (minutes*tariffm + tariffe)) for (tariffm, tariffe) in mtariff] # [val1, val2, ..., valn]
         
         log.debug( "%s - %s" % (match.group(0), calls))
         total = map(lambda x: float("%.4f" % sum(x)) , zip(total, calls))
