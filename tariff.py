@@ -29,8 +29,7 @@ def applyTariff(tariff, fdata):
         match = parser.match(line)
         (hours, mins, secs) = map(evaluator, match.groups())
         minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
-                
-        mtariff = map(lambda x: tariffs[x]['minutes'], tariff)
+        mtariff = [tariffs[x]['minutes'] for x in tariff]
         calls = map(lambda x: float("%.4f" % (minutes*x + ESTABLISHMENT)), mtariff) # [val1, val2, ..., valn]
         
         log.debug( "%s - %s" % (match.group(0), calls))
