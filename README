@@ -1,11 +1,18 @@
 tariff simulator:
 ----------------
 
-reads input file with call minutes and a tariff and returns the total cost of the bill
+Reads input file with call minutes and a tariff and returns the total cost of the bill.
+Also supports finding the best tariff for a single o various monthly bills.
 
+Assumptions:
+-----------
+bills/ should have the monthly bills, each bill having the minutes for each call.
+tariffs.py has the tariffs you want to test.
+All tariffs have the same cost for ANY operator.
+SMS are out.
 
 sample usage:
-./tariff.py data lobo : calculates the bill for month bill/data with tariff lobo
-./tariff.py data best : calculates the best tariff for month bill/data
-./tariff.py all best : calculates the best tariff for all monthly bills in bill/
-./tariff.py all lobo : calculates the total bill for tariff lobo with all monthly bills in bill/
+./tariff.py data tariff : calculates the bill for month 'bills/data' with tariff 'tariff'
+./tariff.py data best : calculates the best tariff for month 'bills/data'
+./tariff.py all best : calculates the best tariff for all monthly bills in bills/
+./tariff.py all tariff : calculates the total bill for tariff 'tariff' with all monthly bills in bills/
