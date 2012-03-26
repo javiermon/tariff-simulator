@@ -49,12 +49,13 @@ def applyTariff(tariff, fdata):
     for (tar, amount) in zip(tariff, total):
         log.debug("%s : %s €" % (tar, amount))
     log.debug("------------")
-    if findbest:
-        best = min(total)
-        winner = tariffs.keys()[total.index(best)]
-        log.debug("BEST TARIFF IS %s FOR %s €" % (winner, best))
-        return (winner, best)
     return (total, calls)
+
+def findBest(total, calls):
+    best = min(total)
+    winner = tariffs.keys()[total.index(best)]
+    log.debug("BEST TARIFF IS %s FOR %s €" % (winner, best))
+    return (winner, best)
 
 if __name__ == '__main__':
     # stderr logging:
@@ -66,5 +67,10 @@ if __name__ == '__main__':
         exit(-1)
 
     tariff = sys.argv[2]
+    findbest = (tariff == 'best')
     fdata = open(sys.argv[1])
-    applyTariff(tariff, fdata)
+    (total, calls) = applyTariff(tariff, fdata)
+    if findbest:
+        findBest(total, calls)
+
+        
