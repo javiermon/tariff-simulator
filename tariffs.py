@@ -5,7 +5,7 @@
 # http://sam.zoy.org/wtfpl/
 
 tariffs = {
-    'elefantito' : {'minutes' : 0.027, 'data': 6.9, 'establishment': 0.15,'url': 'http://www.pepephone.com/'},
+    'elefante'   : {'minutes' : 0.027, 'data': 6.9, 'establishment': 0.15,'url': 'http://www.pepephone.com/'},
     'lobo'       : {'minutes' : 0.022, 'data': 8.5, 'establishment': 0.15,  'url': 'http://www.pepephone.com/promo/htcmania/lobo/' },
     'tu'         : {'minutes' : 0.030, 'data': 6,   'establishment': 0.15, 'url': 'http://www.tuenti.com/#m=Tustore&func=index' },
     'movilona'   : {'minutes' : 0.084, 'data': 6.9, 'establishment': 0,    'url': 'http://www.pepephone.com/tarifamovilonia9/' }
