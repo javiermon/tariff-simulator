@@ -83,7 +83,10 @@ if __name__ == '__main__':
     if sys.argv[1] == 'all':
         sumtotal = [0]*len(tariffs.keys())
         for filename in os.listdir(BILLSDIR):
-            fdata = open(os.path.join(BILLSDIR, filename))
+            path = os.path.join(BILLSDIR, filename)
+            if not os.path.isfile(path):
+                continue
+            fdata = open(path)
             (total, calls) = applyTariff(tariff, fdata)
             sumtotal = map(lambda x: float(PRECISION % sum(x)), zip(total,sumtotal))
 
