@@ -18,9 +18,11 @@ BILLSDIR = 'bills/'
 log = logging.getLogger('tariff')
 parser = re.compile(r"(?:(\d{2}):)?(\d{2}):(\d{2})")
 evaluator = lambda x: 0 if x is None else int(x)
+floatsum = lambda x: float(PRECISION % sum(x))
 
 def applyTariff(tariff, fdata):
     total = [0]*len(tariffs.keys())
+
     
     log.info("------------")
     log.info("BILL FOR %s " % fdata.name)
@@ -34,15 +36,15 @@ def applyTariff(tariff, fdata):
         calls = [float(PRECISION % (minutes*tariffm + tariffe)) for (tariffm, tariffe) in mtariff] # [val1, val2, ..., valn]
         
         log.debug( "%s - %s" % (match.group(0), calls))
-        total = map(lambda x: float(PRECISION % sum(x)) , zip(total, calls))
+        total = map(floatsum , zip(total, calls))
 
     log.debug("------------")
     log.debug("calls: %s €" % total)
     dtariff = [tariffs[x]['data'] for x in tariff]
-    total = map(lambda x: float(PRECISION % sum(x)), zip(total, dtariff))
+    total = map(floatsum, zip(total, dtariff))
     log.debug("calls + %s data plan : %s €" % (dtariff, total))
     vat = map(lambda x: float(PRECISION % (x*IVA)), total)
-    total = map(lambda x: float(PRECISION % sum(x)), zip(total, vat))
+    total = map(floatsum, zip(total, vat))
 
     log.debug("VAT: %s €" % vat)
     log.debug("------------")   
@@ -88,7 +90,7 @@ if __name__ == '__main__':
                 continue
             fdata = open(path)
             (total, calls) = applyTariff(tariff, fdata)
-            sumtotal = map(lambda x: float(PRECISION % sum(x)), zip(total,sumtotal))
+            sumtotal = map(floatsum, zip(total,sumtotal))
 
         printTotal(sumtotal, tariff)
         if findbest:
