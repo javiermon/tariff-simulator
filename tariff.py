@@ -8,6 +8,7 @@ from __future__ import division
 import sys, re, os
 from tariffs import tariffs
 import logging
+import optparse
 
 IVA = 0.18
 MINUTES = 60
@@ -69,20 +70,41 @@ def printTotal(total, tariff):
     log.info("------------")
 
 if __name__ == '__main__':
+    # Setup the command line arguments.
+    optp = optparse.OptionParser()
+
+    # options.
+    optp.add_option("-b", "--bill", dest="bill",
+                    help="bill to process or 'all'.",)
+
+    optp.add_option("-t", "--tariff", dest="tariff",
+                    help="tariff for simulation from %s" % (tariffs.keys() + ['best']))
+
+    optp.add_option("-v", "--verbose", dest="verbose",
+                    help="log verbosity.", action="store_true")
+
+    opts, args = optp.parse_args()
+
+    if opts.bill is None:
+        print >> sys.stderr, "no bill file provided"
+        optp.print_help()
+        sys.exit(1)
+
+    if opts.tariff is None:
+        print >> sys.stderr, "no tariff provided"
+        optp.print_help()
+        sys.exit(1)
+
+    loglevel = logging.INFO if opts.verbose in (None, False) else logging.DEBUG
+
     # stderr logging:
-    logging.basicConfig(format=FORMAT, level=logging.INFO)
+    logging.basicConfig(format=FORMAT, level=loglevel)
 
-    if len(sys.argv) != 3:
-        print >> sys.stderr, "usage: %s file tariff" % sys.argv[0]
-        print >> sys.stderr, "where tariff in %s" % tariffs.keys()
-        exit(-1)
-
-    tariff = sys.argv[2]
     # find the best tariff?
-    findbest = (tariff == 'best')
-    tariff = tariffs.keys() if findbest else [tariff]
+    findbest = (opts.tariff == 'best')
+    tariff = tariffs.keys() if findbest else [opts.tariff]
     # run all bills?
-    if sys.argv[1] == 'all':
+    if opts.bill == 'all':
         sumtotal = [0]*len(tariffs.keys())
         for filename in os.listdir(BILLSDIR):
             path = os.path.join(BILLSDIR, filename)
@@ -96,7 +118,7 @@ if __name__ == '__main__':
         if findbest:
             findBest(sumtotal)
     else:            
-        fdata = open(sys.argv[1])
+        fdata = open(opts.bill)
         (total, calls) = applyTariff(tariff, fdata)
         if findbest:
             findBest(total)
