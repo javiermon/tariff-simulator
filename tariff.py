@@ -20,7 +20,7 @@ log = logging.getLogger('tariff')
 parser = re.compile(r"(?:(\d{2}):)?(\d{2}):(\d{2})")
 evaluator = lambda x: 0 if x is None else int(x)
 floatsum = lambda x: float(PRECISION % sum(x))
-nearpositive = lambda x: x if x >= 0 else 0
+nearpositive = lambda x: x if x > 0 else 0
 mthreshold = lambda x, y: x if not y else nearpositive(x - int(y))
 
 def applyTariff(tariff, fdata):
