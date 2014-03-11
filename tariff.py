@@ -26,7 +26,6 @@ mthreshold = lambda x, y: x if not y else nearpositive(x - int(y))
 def applyTariff(tariff, fdata):
     total = [0]*len(tariffs.keys())
 
-
     log.info("------------")
     log.info("BILL FOR %s " % fdata.name)
     log.debug("time  - cost in %s" % tariff)
