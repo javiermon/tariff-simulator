@@ -20,11 +20,13 @@ log = logging.getLogger('tariff')
 parser = re.compile(r"(?:(\d{2}):)?(\d{2}):(\d{2})")
 evaluator = lambda x: 0 if x is None else int(x)
 floatsum = lambda x: float(PRECISION % sum(x))
+nearpositive = lambda x: x if x >= 0 else 0
+mthreshold = lambda x, y: x if not y else nearpositive(x - int(y))
 
 def applyTariff(tariff, fdata):
     total = [0]*len(tariffs.keys())
 
-    
+
     log.info("------------")
     log.info("BILL FOR %s " % fdata.name)
     log.debug("time  - cost in %s" % tariff)
@@ -33,9 +35,11 @@ def applyTariff(tariff, fdata):
         match = parser.match(line)
         (hours, mins, secs) = map(evaluator, match.groups())
         minutes = int(hours)*MINUTES + int(mins) + int(secs)/MINUTES
-        mtariff = [(tariffs[x]['minutes'], tariffs[x]['establishment']) for x in tariff]
-        calls = [float(PRECISION % (minutes*tariffm + tariffe)) for (tariffm, tariffe) in mtariff] # [val1, val2, ..., valn]
-        
+        mtariff = [(tariffs[x]['minutes'], tariffs[x]['establishment'], tariffs[x]['threshold']) for x in tariff]
+        # we need to apply the threshold tariff to the total minutes, we do it in mthreslhold.
+        # [val1, val2, ..., valn]
+        calls = [float(PRECISION % (mthreshold(minutes, threshold)*tariffm + establishment)) for (tariffm, establishment, threshold) in mtariff]
+
         log.debug( "%s - %s" % (match.group(0), calls))
         total = map(floatsum , zip(total, calls))
 
@@ -48,7 +52,7 @@ def applyTariff(tariff, fdata):
     total = map(floatsum, zip(total, vat))
 
     log.debug("VAT: %s €" % vat)
-    log.debug("------------")   
+    log.debug("------------")
     log.info("TOTAL: ")
 
     for (tar, amount) in zip(tariff, total):
@@ -117,10 +121,8 @@ if __name__ == '__main__':
         printTotal(sumtotal, tariff)
         if findbest:
             findBest(sumtotal)
-    else:            
+    else:
         fdata = open(opts.bill)
         (total, calls) = applyTariff(tariff, fdata)
         if findbest:
             findBest(total)
-
-        
