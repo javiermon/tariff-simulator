@@ -12,7 +12,7 @@ All tariffs have the same cost for ANY operator.
 SMS are out.
 
 sample usage:
-./tariff.py data tariff : calculates the bill for month 'bills/data' with tariff 'tariff'
-./tariff.py data best : calculates the best tariff for month 'bills/data'
-./tariff.py all best : calculates the best tariff for all monthly bills in bills/
-./tariff.py all tariff : calculates the total bill for tariff 'tariff' with all monthly bills in bills/
+./tariff.py -b 'data' -t 'tariff' : calculates the bill for month 'bills/data' with tariff 'tariff'
+./tariff.py -b 'data' -t 'best' : calculates the best tariff for month 'bills/data'
+./tariff.py -b 'all' -t 'best' : calculates the best tariff for all monthly bills in bills/
+./tariff.py -b 'all' -t 'tariff' : calculates the total bill for tariff 'tariff' with all monthly bills in bills/
