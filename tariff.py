@@ -7,10 +7,10 @@
 from __future__ import division
 import sys, re, os
 from tariffs import tariffs
+from tariffs import IVA
 import logging
 import optparse
 
-IVA = 0.18
 MINUTES = 60
 PRECISION = "%.4f"
 FORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
